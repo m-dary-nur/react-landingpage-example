@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import doodle from './assets/images/doodle.svg'
 import FieldNumber from './components/FieldNumber'
 import Chart from './components/Chart'
-import Select from './components/Select'
+import Select from './components/Select2'
 import Table from './components/Table'
 
 const currencyList = [
@@ -58,7 +58,7 @@ function App() {
 							</div>
 							<div className='pb-4'>
 								<label htmlFor='period' className='text-sm block font-bold pb-2'>Investment Period (Years)</label>
-								<FieldNumber type='number' id='period' value={input.period} onChange={handleChange} />
+								<FieldNumber type='number' id='period' value={input.period} onChange={handleChange} max={100} maxLength={3} />
 							</div>
 							<div className='pb-4'>
 								<label htmlFor='growth' className='text-sm block font-bold pb-2'>Annual Growth Rate (%)</label>
@@ -66,7 +66,7 @@ function App() {
 							</div>
 							<div className='pb-4'>
 								<label htmlFor='contribution' className='text-sm block font-bold pb-2'>Monthly Contribution ({input.currency})</label>
-								<FieldNumber type='number' id='contribution' value={input.contribution} onChange={handleChange} />
+								<FieldNumber type='number' id='contribution' value={input.contribution} onChange={handleChange} data-right-label={input.currency} />
 							</div>
 						</form>
 					</div>
