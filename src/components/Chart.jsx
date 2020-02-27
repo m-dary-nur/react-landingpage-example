@@ -3,18 +3,18 @@ import { LineChart, Label, XAxis, YAxis, Tooltip, CartesianGrid, Line } from 're
 import separator from '../helpers/separator'
 
 
-function renderTooltip({ payload = [] }) {
+function renderTooltip(currency, { payload = [] }) {
 	if (!payload || payload.length === 0) { return false }
 	return (
 		<div className='bg-white shadow rounded p-2 font-bold'>
-			<span className='text-blue-500'>£</span> {separator(payload[0].value.toFixed(2))}
+			<span className='text-blue-500'>{currency}</span> {separator(payload[0].value.toFixed(2))}
 		</div>
 	)
 }
 
 const Chart = props => {
 	const [variable, setVariable] = useState({ period: 0, growth: 0, contribution: 0 })
-	const { period, growth, contribution } = variable
+	const { period, growth, contribution, currency } = variable
 
 	useEffect(() => {
 		const handler = setTimeout(() => setVariable(props), 700)
@@ -43,7 +43,7 @@ const Chart = props => {
 	)
 
 	const width = window.innerWidth
-	const defineWidth = width > 1280 ? 800 : (width > 1024 ? 580 : (width > 768 ? 410 : 200))
+	const defineWidth = width > 1280 ? 730 : (width > 1024 ? 580 : (width > 768 ? 410 : 200))
 	return (
 		<div className='px-2 py-4'>
 			<LineChart
@@ -57,7 +57,7 @@ const Chart = props => {
 					<Label value='Years' offset={-3} position='insideBottom' className='font-medium italic' />
 				</XAxis>
 				<YAxis />
-				<Tooltip content={renderTooltip} />
+				<Tooltip content={x => renderTooltip(currency, x)} />
 				<Line type='monotone' dataKey='value' />
 			</LineChart>
 		</div>

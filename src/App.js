@@ -2,9 +2,19 @@ import React, { useState, useEffect } from 'react'
 import doodle from './assets/images/doodle.svg'
 import FieldNumber from './components/FieldNumber'
 import Chart from './components/Chart'
+import Select from './components/Select'
+import Table from './components/Table'
+
+const currencyList = [
+	{value: '£', label: 'GBP' }, 
+	{value: '$', label: 'USD' },
+	{value: '€', label: 'EUR' }, 
+	{value: 'Fr', label: 'CHF' }
+]
 
 function App() {	
 	const [input, setInput] = useState({
+		currency: '£',
 		period: '',
 		growth: '',
 		contribution: ''
@@ -38,10 +48,14 @@ function App() {
 						<span className='w-5 h-px mb-1 bg-orange-500'></span>
 					</button>
 				</header>
-				<main className='flex flex-col-reverse sm:flex-row jusitfy-between items-top py-12'>
+				<div className='flex flex-col-reverse sm:flex-row jusitfy-between items-top py-12'>
 					<div className='sm:w-2/5 flex flex-col items-center sm:items-start text-center sm:text-left'>
 						<h2 className='text-2xl text-blue-400 font-bold tracking-wide mb-6'>Start Calculation</h2>
 						<form className='w-3/4'>
+							<div className='pb-4'>
+								<label htmlFor='currency' className='text-sm block font-bold pb-2'>Investment Period (Years)</label>
+								<Select id='currency' value={input.currency} onChange={handleChange} items={currencyList} itemId='value' itemLabel={o => `${o.label} (${o.value})`} />
+							</div>
 							<div className='pb-4'>
 								<label htmlFor='period' className='text-sm block font-bold pb-2'>Investment Period (Years)</label>
 								<FieldNumber type='number' id='period' value={input.period} onChange={handleChange} />
@@ -61,7 +75,12 @@ function App() {
 							<Chart {...input} />
 						</div>
 					</div>
-				</main>
+				</div>
+				<div className='flex sm:flex-row jusitfy-between items-top py-12'>					
+					<div className='sm:w-2/5 flex flex-col items-center sm:items-start text-center sm:text-left'>
+						<Table {...input} />
+					</div>
+				</div>
 			</div>
 		</div>
 	);
