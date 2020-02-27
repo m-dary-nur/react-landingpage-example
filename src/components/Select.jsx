@@ -31,19 +31,17 @@ const Select = ({
     const renderLabel = o => typeof itemLabel === 'function' ? itemLabel(o) : o[itemLabel]
 
     useEffect(() => {
-        const i = items.findIndex(x => x[itemId] === value)
-        const newVal = i !== -1 ? items[i] : null
-        setSelectedItem(newVal)
+        const item = items.find(x => x[itemId] === value)
+        setSelectedItem(item)
     }, [value, items, itemId])
 
     const itemListPredicate = (query, itemlist) => {
-        const dataFilteredMemo = itemlist.filter(o => renderLabel(o).toString().toLowerCase().includes(query.toLowerCase()))
-        return dataFilteredMemo
+        return itemlist.filter(o => renderLabel(o).toString().toLowerCase().includes(query.toLowerCase()))
     }
 
     const itemListRenderer = ({ query, activeItem }) => {
-        const dataFilteredMemo = items.filter(o => renderLabel(o).toString().toLowerCase().includes(query.toLowerCase()))
-        const activeIndex = activeItem ? dataFilteredMemo.findIndex(o => o[itemId] === activeItem[itemId]) : 0
+        const dataFiltered = items.filter(o => renderLabel(o).toString().toLowerCase().includes(query.toLowerCase()))        
+        const activeIndex = selectedItem ? dataFiltered.findIndex(o => o[itemId] === selectedItem[itemId]) : -1
 
         return (
             <div className='select-wrapper'>
@@ -51,12 +49,12 @@ const Select = ({
                     {({ width }) => (
                         <List
                             width={width}
-                            height={dataFilteredMemo.length > 7 ? 210 : (dataFilteredMemo.length > 0 ? dataFilteredMemo.length * 30 : 30)}
+                            height={dataFiltered.length > 7 ? 210 : (dataFiltered.length > 0 ? dataFiltered.length * 30 : 30)}
                             className='select-list'
-                            rowCount={dataFilteredMemo.length}
+                            rowCount={dataFiltered.length}
                             overscanRowCount={10}
                             rowHeight={30}
-                            rowRenderer={xn => _rowRenderer(xn, dataFilteredMemo, activeIndex, query)}
+                            rowRenderer={xn => _rowRenderer(xn, dataFiltered, activeIndex, query)}
                             noRowsRenderer={() => <div style={noRowStyled}>No data.</div>}
                             scrollToIndex={activeIndex}
                         />
@@ -88,6 +86,7 @@ const Select = ({
     }
         
     const handleClick = () => setIsOpen(true)
+    const handleBlur = () => setTimeout(() => setIsOpen(false), 170)
 
     return (
         <BpSelect
@@ -99,6 +98,7 @@ const Select = ({
             itemListPredicate={itemListPredicate}
             noResults={<MenuItem disabled={true} text='Tidak ada data.' />}
             popoverProps={{ usePortal: false, inline: true, minimal: true, isOpen }}
+            inputProps={{ onBlur: handleBlur }}
             onItemSelect={(item, a, b) => itemChoose(item, a, b)}
             className='select'
             disabled={disabled}

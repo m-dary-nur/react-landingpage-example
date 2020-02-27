@@ -53,7 +53,7 @@ function App() {
 						<h2 className='text-2xl text-blue-400 font-bold tracking-wide mb-6'>Start Calculation</h2>
 						<form className='w-3/4'>
 							<div className='pb-4'>
-								<label htmlFor='currency' className='text-sm block font-bold pb-2'>Investment Period (Years)</label>
+								<label htmlFor='currency' className='text-sm block font-bold pb-2'>Currency</label>
 								<Select id='currency' value={input.currency} onChange={handleChange} items={currencyList} itemId='value' itemLabel={o => `${o.label} (${o.value})`} />
 							</div>
 							<div className='pb-4'>
@@ -65,7 +65,7 @@ function App() {
 								<FieldNumber type='number' id='growth' value={input.growth} onChange={handleChange} />
 							</div>
 							<div className='pb-4'>
-								<label htmlFor='contribution' className='text-sm block font-bold pb-2'>Monthly Contribution (£)</label>
+								<label htmlFor='contribution' className='text-sm block font-bold pb-2'>Monthly Contribution ({input.currency})</label>
 								<FieldNumber type='number' id='contribution' value={input.contribution} onChange={handleChange} />
 							</div>
 						</form>
