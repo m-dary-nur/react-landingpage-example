@@ -48,7 +48,7 @@ function App() {
 						<span className='w-5 h-px mb-1 bg-orange-500'></span>
 					</button>
 				</header>
-				<div className='flex flex-col-reverse sm:flex-row jusitfy-between items-top py-12'>
+				<div className='flex sm:flex-row jusitfy-between items-top py-12'>
 					<div className='sm:w-2/5 flex flex-col items-center sm:items-start text-center sm:text-left'>
 						<h2 className='text-2xl text-blue-400 font-bold tracking-wide mb-6'>Start Calculation</h2>
 						<form className='w-3/4'>
