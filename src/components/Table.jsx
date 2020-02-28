@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { memo, useMemo, useState, useEffect } from 'react'
 import { HTMLTable } from '@blueprintjs/core'
 import separator from '../helpers/separator'
 
@@ -58,4 +58,4 @@ const Table = props => {
     )
 }
 
-export default Table
+export default memo(Table)

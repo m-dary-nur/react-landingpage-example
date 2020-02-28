@@ -1,135 +1,83 @@
-import React, { memo, useEffect, useState } from 'react'
-import { MenuItem, Icon as BpIcon } from '@blueprintjs/core'
-import { Select as BpSelect } from '@blueprintjs/select'
+import React, { memo, useState, useEffect } from 'react'
 import { AutoSizer, List } from 'react-virtualized'
 
-import highlight from '../helpers/highlight'
 
+const Select = props => {
+    const { value, items, itemId, itemLabel } = props
+    const [selected, setSelected] = useState({item: null, index: -1})
+    const [isOpen, setIsOpen] = useState(false)
+    
+    const display = x => x ? (typeof itemLabel === 'function' ? itemLabel(x) : x[itemLabel]) : <>&nbsp;</>
+    const handleOpen = () => setIsOpen(true)
+    const handleClose = () => setTimeout(() => setIsOpen(false), 170)
 
-const noRowStyled = {
-    padding: '0 0.5em',
-    height: 30,
-    lineHeight: 2.2,
-    textAlign: 'center'
+    useEffect(() => {
+        if (value && items.length > 0) {
+            const index = items.findIndex(x => x[itemId] === value)
+            setSelected({ item: items[index], index })
+        }
+    }, [value, items, itemId])
+
+    return (
+        <div className='dropdown inline-block relative w-full'>            
+            <button type='button' onClick={handleOpen} onBlur={handleClose} className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-left leading-tight focus:outline-none focus:shadow-outline border-blue-300'>
+                <span>{display(selected.item)}</span>
+            </button>
+            {isOpen && <DropdownSelect { ...props } { ...{ display, selected, setSelected } } />}
+        </div>
+    )
 }
 
-const Select = ({
+export default memo(Select, (p, n) => 
+    p.value === n.value
+)
+
+
+const DropdownSelect = ({
     id,
     name,
     value,
     onChange,
-    items = [],
+    items,
     itemId,
     itemLabel,
-    required,
-    placeholder,
-    disabled,
-    useClear
-}) => {
-    const [selectedItem, setSelectedItem] = useState(null)
-    const [isOpen, setIsOpen] = useState(false)
-    const renderLabel = o => typeof itemLabel === 'function' ? itemLabel(o) : o[itemLabel]
-
-    useEffect(() => {
-        const item = items.find(x => x[itemId] === value)
-        setSelectedItem(item)
-    }, [value, items, itemId])
-
-    const itemListPredicate = (query, itemlist) => {
-        return itemlist.filter(o => renderLabel(o).toString().toLowerCase().includes(query.toLowerCase()))
+    selected,
+    setSelected,
+    display,
+}) => {      
+    const handleSelected = (item, index) => {
+        onChange({target: { id, name, value:item[itemId] }})
+        setSelected({ item, index })
     }
 
-    const itemListRenderer = ({ query, activeItem }) => {
-        const dataFiltered = items.filter(o => renderLabel(o).toString().toLowerCase().includes(query.toLowerCase()))        
-        const activeIndex = selectedItem ? dataFiltered.findIndex(o => o[itemId] === selectedItem[itemId]) : -1
+    const renderRow = ({ index, key, style }) => {
+        const item = items[index]                
+        console.log(selected.index === index, selected.index)
 
         return (
-            <div className='select-wrapper'>
-                <AutoSizer disableHeight>
-                    {({ width }) => (
-                        <List
-                            width={width}
-                            height={dataFiltered.length > 7 ? 210 : (dataFiltered.length > 0 ? dataFiltered.length * 30 : 30)}
-                            className='select-list'
-                            rowCount={dataFiltered.length}
-                            overscanRowCount={10}
-                            rowHeight={30}
-                            rowRenderer={xn => _rowRenderer(xn, dataFiltered, activeIndex, query)}
-                            noRowsRenderer={() => <div style={noRowStyled}>No data.</div>}
-                            scrollToIndex={activeIndex}
-                        />
-                    )}
-                </AutoSizer>
-            </div>
+            <li onClick={() => handleSelected(item, index)} key={key} className={`border-gray-200 hover:text-white py-2 px-4 block whitespace-no-wrap${selected.index === index ? ' bg-blue-500 text-white': ' hover:bg-blue-400 bg-white'}`} style={style}>
+                {display(item)}
+            </li>
         )
-    }
-
-    const _rowRenderer = (xn, dataFilteredMemo, activeIndex, query) => {
-        const { index, key, style } = xn
-        const item = dataFilteredMemo[index]
-
-        return (
-            <div key={key} onClick={() => itemChoose(item)} style={style} className={activeIndex === index ? 'active bg-blue-300 text-white hover:bg-blue-500' : 'hover:bg-blue-500 hover:text-white'}>{highlight(renderLabel(item), query)}</div>
-        )
-    }
-
-    const itemChoose = item => {
-        onChange({ target: { id, name, value: item[itemId] } }, item)
-        setSelectedItem(item)
-        setIsOpen(false)
-    }
-    
-    const unsetSelectedItem = () => {
-        onChange({ target: { id, name, value: null } }, {})
-        setSelectedItem(null)
-        setIsOpen(true)
-    }
-        
-    const handleClick = () => setIsOpen(true)
-    const handleBlur = () => setTimeout(() => setIsOpen(false), 170)
+    } 
 
     return (
-        <BpSelect
-            fill
-            id={id}
-            name={name}
-            items={items || []}
-            itemListRenderer={itemListRenderer}
-            itemListPredicate={itemListPredicate}
-            noResults={<MenuItem disabled={true} text='Tidak ada data.' />}
-            popoverProps={{ usePortal: false, inline: true, minimal: true, isOpen }}
-            inputProps={{ onBlur: handleBlur }}
-            onItemSelect={(item, a, b) => itemChoose(item, a, b)}
-            className='select'
-            disabled={disabled}
-        >
-
-            <button
-                onClick={handleClick}
-                type="button"
-                disabled={disabled}
-                className='flex shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white justify-between focus:outline-none focus:shadow-outline border-blue-300'
-            >
-                {selectedItem ? renderLabel(selectedItem) : (
-                        <div className='text-gray-300'>
-                            {placeholder ? placeholder : ''}
-                        </div>
-                    )}
-                {useClear && !required ?
-                    (selectedItem ? <BpIcon onClick={disabled ? null : unsetSelectedItem} icon='cross' /> : <BpIcon icon='double-caret-vertical' />)
-                    :
-                    <BpIcon icon='double-caret-vertical' />
-                }
-            </button>
-        </BpSelect>
+        <AutoSizer disableHeight>
+            {({ width }) => (
+                <ul className='absolute block bg-white text-gray-700 w-full cursor-pointer shadow-md rounded-t-none z-10'>
+                    <List
+                        width={width}
+                        height={items.length > 7 ? 238 : (items.length > 0 ? items.length * 34 : 34)}
+                        className='select-list'
+                        rowCount={items.length}
+                        overscanRowCount={10}
+                        rowHeight={34}
+                        rowRenderer={renderRow}
+                        noRowsRenderer={() => <li className='rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap'>no data</li>}
+                        scrollToIndex={0}
+                    />
+                </ul>
+            )}
+        </AutoSizer>
     )
 }
-
-export default memo(Select, (p, n) =>
-    p.label === n.label &&
-    p.labelHelper === n.labelHelper &&
-    p.value === n.value &&
-    p.required === n.required &&
-    p.disabled === n.disabled &&
-    (p.items.length === n.items.length && p.items.every((o, i) => o === n.items[i]))
-)

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { memo, useMemo, useState, useEffect } from 'react'
 import { LineChart, Label, XAxis, YAxis, Tooltip, CartesianGrid, Line } from 'recharts'
 import separator from '../helpers/separator'
 
@@ -64,4 +64,4 @@ const Chart = props => {
 	)
 }
 
-export default Chart
+export default memo(Chart)
