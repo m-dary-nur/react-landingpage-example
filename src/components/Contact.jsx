@@ -9,6 +9,8 @@ const Contact = () => {
 		message: '',
 	})
 	const [feedback, setFeedback] = useState(null)
+
+	const handleChange = e => setFormData({ ...formData, [e.target.name]: e.target.value }) 
 	
 	const encode = data => {
 		return Object.keys(data)
@@ -64,18 +66,18 @@ const Contact = () => {
 								<div className='flex flex-wrap mb-6 -mx-4'>
 									<div className='w-full md:w-1/2 mb-6 md:mb-0 px-4'>
 										<label className='block mb-2 text-copy-primary font-bold' htmlFor='name'>Name</label>
-										<input type='text' name='name' id='name' placeholder='John Doe' v-model='formData.name' className='block w-full bg-background-form border border-border-color-primary shadow rounded outline-none focus:border-green-700 mb-2 p-4' required />
+										<input type='text' name='name' id='name' value={formData.name} onChange={handleChange} placeholder='John Doe' className='block w-full bg-background-form border border-border-color-primary shadow rounded outline-none focus:border-green-700 mb-2 p-4' required />
 									</div>
 
 									<div className='w-full px-4 md:w-1/2'>
 										<label className='block text-copy-primary mb-2 font-bold' htmlFor='email'>Email Address</label>
-										<input type='email' name='email' v-model='formData.email' id='email' placeholder='email@example.com'  className='block w-full bg-background-form border border-border-color-primary shadow rounded outline-none focus:border-green-700 mb-2 p-4' required />
+										<input type='email' name='email'id='email' value={formData.email} onChange={handleChange} placeholder='email@example.com'  className='block w-full bg-background-form border border-border-color-primary shadow rounded outline-none focus:border-green-700 mb-2 p-4' required />
 									</div>
 								</div>
 
 								<div className='w-full mb-12'>
 									<label className='block text-copy-primary mb-2 font-bold' htmlFor='message'>Message</label>
-									<textarea id='message' rows='5' name='message' v-model='formData.message' className='block w-full bg-background-form border border-border-color-primary shadow rounded outline-none appearance-none focus:border-green-700 mb-2 px-4 py-4' placeholder='Enter your message here.' required></textarea>
+									<textarea id='message' rows='5' name='message' value={formData.message} onChange={handleChange} className='block w-full bg-background-form border border-border-color-primary shadow rounded outline-none appearance-none focus:border-green-700 mb-2 px-4 py-4' placeholder='Enter your message here.' required></textarea>
 								</div>
 
 								<div className='flex w-full'>
