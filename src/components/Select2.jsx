@@ -52,9 +52,10 @@ const DropdownSelect = ({
 
     const renderRow = ({ index, key, style }) => {
         const item = items[index]                
+        console.log(selected.index === index, selected.index)
 
         return (
-            <li onClick={() => handleSelected(item, index)} key={key} className='border-gray-200 bg-white hover:bg-blue-400 hover:text-white py-2 px-4 block whitespace-no-wrap' style={style}>
+            <li onClick={() => handleSelected(item, index)} key={key} className={`border-gray-200 hover:text-white py-2 px-4 block whitespace-no-wrap${selected.index === index ? ' bg-blue-500 text-white': ' hover:bg-blue-400 bg-white'}`} style={style}>
                 {display(item)}
             </li>
         )
