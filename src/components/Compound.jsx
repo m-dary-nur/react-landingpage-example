@@ -22,17 +22,15 @@ const Compound = () => {
 	})
 
 	const handleChange = e => {
-		console.log(e)
 		setFormData({ ...formData, [e.target.name]: Number(e.target.value) })
 	} 
 
 	const handleDropdown = e => {
-		console.log(e)
 		setFormData({ ...formData, [e.target.name]: e.target.value })
 	} 
 
-	const handleSubmit = () => {
-
+	const handleSubmit = e => {
+		e.preventDefault()
 	}
 
 	return (
@@ -45,6 +43,7 @@ const Compound = () => {
 						<div className='flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row justify-between'>
 
 							<div className='mb-24 md:mb-16 xl:mb-8 sm:w-full md:w-1/3'>
+								{JSON.stringify(formData)}
 								<form onSubmit={handleSubmit} name='contact' method='post' data-netlify='true' data-netlify-honeypot='bot-field' className='w-full'>													
 									<div className='mb-6'>
 										<div className='w-full mb-6 px-4'>
@@ -64,7 +63,7 @@ const Compound = () => {
 
 										<div className='w-full mb-6 px-4'>
 											<label className='block text-copy-primary mb-2 font-bold' htmlFor='contribution'>Monthly Contribution ({formData.currency})</label>
-											<FieldNumber type='number' onFocus={e => e.target.select()} name='contribution' id='contribution' value={formData.contribution} onChange={handleChange} max={100} maxLength={3} />
+											<FieldNumber type='number' onFocus={e => e.target.select()} name='contribution' id='contribution' value={formData.contribution} onChange={handleChange} max={100} maxLength={3} data-right-label={formData.currency} />
 										</div>
 									</div>
 								</form>

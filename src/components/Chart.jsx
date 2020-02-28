@@ -13,7 +13,6 @@ function renderTooltip(currency, { payload = [] }) {
 }
 
 const Chart = props => {
-	console.log(props)
 	const [variable, setVariable] = useState({ period: 0, growth: 0, contribution: 0 })
 	const { period, growth, contribution, currency } = variable
 

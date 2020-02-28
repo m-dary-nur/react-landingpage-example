@@ -2,8 +2,8 @@ import React, { memo } from 'react'
 
 const dataRightLabelStyle = {
     position: 'absolute',
-    paddingLeft: 10,
-    paddingTop: 9,
+    paddingLeft: 12,
+    paddingTop: 17,
 }
 
 const FieldNumber = props => {    
@@ -16,6 +16,6 @@ const FieldNumber = props => {
 }
 
 export default memo(FieldNumber, (p, n) =>
-    p.value === n.value ||
+    p.value === n.value &&
     p['data-right-label'] === n['data-right-label']
 )
