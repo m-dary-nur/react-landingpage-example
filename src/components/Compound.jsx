@@ -43,7 +43,6 @@ const Compound = () => {
 						<div className='flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row justify-between'>
 
 							<div className='mb-24 md:mb-16 xl:mb-8 sm:w-full md:w-1/3'>
-								{JSON.stringify(formData)}
 								<form onSubmit={handleSubmit} name='contact' method='post' data-netlify='true' data-netlify-honeypot='bot-field' className='w-full'>													
 									<div className='mb-6'>
 										<div className='w-full mb-6 px-4'>
