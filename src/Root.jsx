@@ -7,6 +7,7 @@ import Process from './components/Process'
 import Services from './components/Services'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import Compound from './components/Compound'
 
 // const currencies = [
 // 	{ value: '£', label: 'GBP' },
@@ -45,6 +46,7 @@ function Root() {
 			<About />
 			<Process />
 			<Services />
+			<Compound />
 			<Contact />
 			<Footer />
 		</div>	

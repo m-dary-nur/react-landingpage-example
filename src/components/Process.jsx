@@ -1,11 +1,9 @@
 import React, { memo } from 'react'
 
-// import Circle2Svg from '../assets/images/circle2.svg'
 
 const Process = () => {
 	return (
 		<div id='process' className='relative'>
-			{/* <img src={Circle2Svg} alt='circle2' className='hidden sm:block absolute top-0 left-0 -mx-32' /> */}
 			<div className='container mx-auto px-6 pt-6 pb-12 relative'>
 				<h3 className='flex flex-col items-center text-4xl text-secondary font-bold mb-12'>Our process <span className='bg-primary h-1 w-20 block mt-4'></span></h3>
 				<div className='flex flex-col md:flex-row xl:px-2'>

@@ -20,7 +20,7 @@ const Select = props => {
 
     return (
         <div className='dropdown inline-block relative w-full'>            
-            <button type='button' onClick={handleOpen} onBlur={handleClose} className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 text-left leading-tight focus:outline-none focus:shadow-outline border-blue-300'>
+            <button type='button' onClick={handleOpen} onBlur={handleClose} className='block w-full bg-background-form border border-border-color-primary shadow rounded outline-none text-left focus:border-green-700 mb-2 p-4'>
                 <span>{display(selected.item)}</span>
             </button>
             {isOpen && <DropdownSelect { ...props } { ...{ display, selected, setSelected } } />}
@@ -36,11 +36,9 @@ export default memo(Select, (p, n) =>
 const DropdownSelect = ({
     id,
     name,
-    value,
     onChange,
     items,
     itemId,
-    itemLabel,
     selected,
     setSelected,
     display,
@@ -52,10 +50,9 @@ const DropdownSelect = ({
 
     const renderRow = ({ index, key, style }) => {
         const item = items[index]                
-        console.log(selected.index === index, selected.index)
 
         return (
-            <li onClick={() => handleSelected(item, index)} key={key} className={`border-gray-200 hover:text-white py-2 px-4 block whitespace-no-wrap${selected.index === index ? ' bg-blue-500 text-white': ' hover:bg-blue-400 bg-white'}`} style={style}>
+            <li onClick={() => handleSelected(item, index)} key={key} className={`border-gray-200 py-2 px-4 block whitespace-no-wrap${selected.index === index ? ' bg-primary text-white': ' hover:bg-gray-200 bg-white'}`} style={style}>
                 {display(item)}
             </li>
         )
@@ -64,7 +61,7 @@ const DropdownSelect = ({
     return (
         <AutoSizer disableHeight>
             {({ width }) => (
-                <ul className='absolute block bg-white text-gray-700 w-full cursor-pointer shadow-md rounded-t-none z-10'>
+                <ul className='absolute block bg-white text-gray-700 w-full cursor-pointer shadow-lg rounded-t-none z-10'>
                     <List
                         width={width}
                         height={items.length > 7 ? 238 : (items.length > 0 ? items.length * 34 : 34)}

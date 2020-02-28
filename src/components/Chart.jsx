@@ -1,5 +1,5 @@
 import React, { memo, useMemo, useState, useEffect } from 'react'
-import { LineChart, Label, XAxis, YAxis, Tooltip, CartesianGrid, Line } from 'recharts'
+import { LineChart, Label, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts'
 import separator from '../helpers/separator'
 
 
@@ -13,6 +13,7 @@ function renderTooltip(currency, { payload = [] }) {
 }
 
 const Chart = props => {
+	console.log(props)
 	const [variable, setVariable] = useState({ period: 0, growth: 0, contribution: 0 })
 	const { period, growth, contribution, currency } = variable
 
@@ -42,26 +43,29 @@ const Chart = props => {
 		[period, growth, contribution]
 	)
 
-	const width = window.innerWidth
-	const defineWidth = width > 1280 ? 730 : (width > 1024 ? 580 : (width > 768 ? 410 : 200))
 	return (
 		<div className='px-2 py-4'>
-			<LineChart
-				width={defineWidth}
-				height={400}
-				data={data}
-				margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-			>
-				<CartesianGrid strokeDasharray='3 3' />
-				<XAxis dataKey='label'>
-					<Label value='Years' offset={-3} position='insideBottom' className='font-medium italic' />
-				</XAxis>
-				<YAxis />
-				<Tooltip content={x => renderTooltip(currency, x)} />
-				<Line type='monotone' dataKey='value' />
-			</LineChart>
+			<ResponsiveContainer height={400} width='100%'>
+				<LineChart					
+					data={data}
+					margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+				>
+					<CartesianGrid strokeDasharray='3 3' />
+					<XAxis dataKey='label'>
+						<Label value='Years' offset={-3} position='insideBottom' className='font-medium italic' />
+					</XAxis>
+					<YAxis />
+					<Tooltip content={x => renderTooltip(currency, x)} />
+					<Line type='monotone' dataKey='value' />
+				</LineChart>
+			</ResponsiveContainer>
 		</div>
 	)
 }
 
-export default memo(Chart)
+export default memo(Chart, (p, n) => 
+	p.period === n.period ||
+	p.growth === n.growth ||
+	p.contribution === n.contribution ||
+	p.currency === n.currency
+)
