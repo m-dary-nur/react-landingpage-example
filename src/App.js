@@ -18,7 +18,7 @@ function App() {
 	const [input, setInput] = useState({
 		currency: '£',
 		period: 15,
-		growth: 1,
+		growth: 8,
 		contribution: 500
 	})
 	const handleChange = e => {	
