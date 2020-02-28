@@ -63,7 +63,7 @@ const DropdownSelect = ({
     return (
         <AutoSizer disableHeight>
             {({ width }) => (
-                <ul className='absolute block bg-white text-gray-700 w-full cursor-pointer shadow-md rounded-t-none'>
+                <ul className='absolute block bg-white text-gray-700 w-full cursor-pointer shadow-md rounded-t-none z-10'>
                     <List
                         width={width}
                         height={items.length > 7 ? 238 : (items.length > 0 ? items.length * 34 : 34)}
