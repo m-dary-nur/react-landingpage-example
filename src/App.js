@@ -5,19 +5,21 @@ import Chart from './components/Chart'
 import Select from './components/Select2'
 import Table from './components/Table'
 
-const currencyList = [
+const currencies = [
 	{value: '£', label: 'GBP' }, 
 	{value: '$', label: 'USD' },
 	{value: '€', label: 'EUR' }, 
 	{value: 'Fr', label: 'CHF' }
 ]
 
+const rates = [...Array(8).keys()].map(x => ({ value: (x+1), label: (x+1) + '%' }))
+
 function App() {	
 	const [input, setInput] = useState({
 		currency: '£',
-		period: '',
-		growth: '',
-		contribution: ''
+		period: 15,
+		growth: 1,
+		contribution: 500
 	})
 	const handleChange = e => {	
 		const { id, value } = e.target
@@ -54,15 +56,15 @@ function App() {
 						<form className='w-3/4'>
 							<div className='pb-4'>
 								<label htmlFor='currency' className='text-sm block font-bold pb-2'>Currency</label>
-								<Select id='currency' value={input.currency} onChange={handleChange} items={currencyList} itemId='value' itemLabel={o => `${o.label} (${o.value})`} />
+								<Select id='currency' value={input.currency} onChange={handleChange} items={currencies} itemId='value' itemLabel={o => `${o.label} (${o.value})`} />
 							</div>
 							<div className='pb-4'>
 								<label htmlFor='period' className='text-sm block font-bold pb-2'>Investment Period (Years)</label>
 								<FieldNumber type='number' id='period' value={input.period} onChange={handleChange} max={100} maxLength={3} />
 							</div>
 							<div className='pb-4'>
-								<label htmlFor='growth' className='text-sm block font-bold pb-2'>Annual Growth Rate (%)</label>
-								<FieldNumber type='number' id='growth' value={input.growth} onChange={handleChange} />
+								<label htmlFor='growth' className='text-sm block font-bold pb-2'>Annual Growth Rate</label>
+								<Select id='growth' value={input.growth} onChange={handleChange} items={rates} itemId='value' itemLabel='label' />
 							</div>
 							<div className='pb-4'>
 								<label htmlFor='contribution' className='text-sm block font-bold pb-2'>Monthly Contribution ({input.currency})</label>
