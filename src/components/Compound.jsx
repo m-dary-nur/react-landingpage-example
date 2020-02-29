@@ -3,6 +3,7 @@ import Select from './Select'
 import FieldNumber from './FieldNumber'
 import Chart from './Chart'
 import Table from './Table'
+import rawCountries from '../helpers/rawCountries'
 
 const currencies = [
 	{ value: '£', label: 'GBP' },
@@ -12,6 +13,9 @@ const currencies = [
 ]
 
 const rates = [...Array(8).keys()].map(x => ({ value: (x + 1), label: (x + 1) + '%' }))
+
+
+const Flag = ({ flag }) => <div className={`flag ${flag}`}></div>
 
 const Compound = () => {
 	
@@ -43,7 +47,7 @@ const Compound = () => {
 
 						<div className='mb-24 md:mb-16 xl:mb-8 sm:w-full w-full'>
 							<form onSubmit={handleSubmit} name='contact' method='post' data-netlify='true' data-netlify-honeypot='bot-field' className='w-full'>													
-								<div className='flex flex-wrap mb-6 -mx-4'>
+								<div className='flex flex-wrap mb-6'>
 									<div className='w-full md:w-1/2 mb-6 px-4'>
 										<label className='block mb-2 text-copy-primary font-bold' htmlFor='currency'>Currency</label>
 										<Select name='currency' id='currency' value={formData.currency} onChange={handleDropdown} items={currencies} itemId='value' itemLabel={o => `${o.label} (${o.value})`} />
@@ -54,7 +58,7 @@ const Compound = () => {
 										<FieldNumber type='number' onFocus={e => e.target.select()} name='period' id='period' value={formData.period} onChange={handleChange} max={100} maxLength={3} />
 									</div>
 								</div>
-								<div className='flex flex-wrap mb-6 -mx-4'>
+								<div className='flex flex-wrap mb-6'>
 									<div className='w-full md:w-1/2 mb-6 px-4'>
 										<label className='block mb-2 text-copy-primary font-bold' htmlFor='growth'>Annual Growth Rate</label>
 										<Select name='growth' id='growth' value={formData.growth} onChange={handleDropdown} items={rates} itemId='value' itemLabel='label' />
@@ -64,6 +68,10 @@ const Compound = () => {
 										<label className='block text-copy-primary mb-2 font-bold' htmlFor='contribution'>Monthly Contribution ({formData.currency})</label>
 										<FieldNumber type='number' onFocus={e => e.target.select()} name='contribution' id='contribution' value={formData.contribution} onChange={handleChange} max={100} maxLength={3} data-right-label={formData.currency} />
 									</div>
+								</div>
+								<div className='flex flex-wrap mb-6 px-4'>
+									<label className='block text-copy-primary mb-2 font-bold' htmlFor='region'>Phone Number</label>
+									<Select searchable name='region' id='region' value={formData.region} onChange={handleDropdown} items={rawCountries} itemId={3} itemLabel={o => `${o[3]} ${o[0]}`} itemRender={(o, x) => <><Flag flag={o[2]} /> &nbsp; {o[0]} &nbsp; <span className={x ? 'text-white font-bold' : 'text-gray-500'}>+{o[3]}</span></>} />
 								</div>
 							</form>
 						</div>
