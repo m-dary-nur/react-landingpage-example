@@ -1,10 +1,11 @@
 import React, { memo, useState } from 'react'
 import Select from './Select'
-import FieldNumber from './FieldNumber'
+import Field from './Field'
 import Chart from './Chart'
 import Table from './Table'
 import rawCountries from '../helpers/rawCountries'
 
+const rates = [...Array(8).keys()].map(x => ({ value: (x + 1), label: (x + 1) + '%' }))
 const currencies = [
 	{ value: '£', label: 'GBP' },
 	{ value: '$', label: 'USD' },
@@ -12,8 +13,11 @@ const currencies = [
 	{ value: 'Fr', label: 'CHF' }
 ]
 
-const rates = [...Array(8).keys()].map(x => ({ value: (x + 1), label: (x + 1) + '%' }))
-
+const leftLabelStyle = {
+    position: 'absolute',
+    paddingLeft: 12,
+    paddingTop: 17,
+}
 
 const Flag = ({ flag }) => <div className={`flag ${flag}`}></div>
 
@@ -23,12 +27,18 @@ const Compound = () => {
 		currency: '£',
 		period: 15,
 		growth: 8,
-		contribution: 500
+		contribution: 500,
+		phonecode: '62',
+		phonenumber: ''
 	})
 
-	const handleChange = e => {
+	const handleNumber = e => {
 		setFormData({ ...formData, [e.target.name]: Number(e.target.value) })
-	} 
+	}
+
+	const handlePhone = e => {
+		setFormData({ ...formData, [e.target.name]: e.target.value.replace(/[^0-9]/g, '') })
+	}
 
 	const handleDropdown = e => {
 		setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -46,7 +56,7 @@ const Compound = () => {
 						<h3 className='flex flex-col items-center text-4xl text-secondary font-bold text-center pb-12'>Let's calculate <span className='bg-primary h-1 w-20 block mt-4'></span></h3>
 
 						<div className='mb-24 md:mb-16 xl:mb-8 sm:w-full w-full'>
-							<form onSubmit={handleSubmit} name='contact' method='post' data-netlify='true' data-netlify-honeypot='bot-field' className='w-full'>													
+							<form onSubmit={handleSubmit} name='calculation' method='post' className='w-full'>													
 								<div className='flex flex-wrap mb-6'>
 									<div className='w-full md:w-1/2 mb-6 px-4'>
 										<label className='block mb-2 text-copy-primary font-bold' htmlFor='currency'>Currency</label>
@@ -55,7 +65,7 @@ const Compound = () => {
 
 									<div className='w-full md:w-1/2 mb-6 px-4'>
 										<label className='block text-copy-primary mb-2 font-bold' htmlFor='period'>Investment Period (Years)</label>
-										<FieldNumber type='number' onFocus={e => e.target.select()} name='period' id='period' value={formData.period} onChange={handleChange} max={100} maxLength={3} />
+										<Field type='number' name='period' id='period' value={formData.period} onChange={handleNumber} onFocus={e => e.target.select()} />
 									</div>
 								</div>
 								<div className='flex flex-wrap mb-6'>
@@ -66,13 +76,20 @@ const Compound = () => {
 
 									<div className='w-full md:w-1/2 mb-6 px-4'>
 										<label className='block text-copy-primary mb-2 font-bold' htmlFor='contribution'>Monthly Contribution ({formData.currency})</label>
-										<FieldNumber type='number' onFocus={e => e.target.select()} name='contribution' id='contribution' value={formData.contribution} onChange={handleChange} max={100} maxLength={3} data-right-label={formData.currency} />
+										<span className='text-gray-500' style={leftLabelStyle}>{formData.currency}</span>
+										<Field type='number' name='contribution' id='contribution' value={formData.contribution} onChange={handleNumber} onFocus={e => e.target.select()} style={{ paddingLeft: '2rem' }} />
 									</div>
 								</div>
-								<div className='flex flex-wrap mb-6 px-4'>
-									<label className='block text-copy-primary mb-2 font-bold' htmlFor='region'>Phone Number</label>
-									<Select searchable name='region' id='region' value={formData.region} onChange={handleDropdown} items={rawCountries} itemId={3} itemLabel={o => `${o[3]} ${o[0]}`} itemRender={(o, x) => <><Flag flag={o[2]} /> &nbsp; {o[0]} &nbsp; <span className={x ? 'text-white font-bold' : 'text-gray-500'}>+{o[3]}</span></>} />
-								</div>
+								<div className='flex flex-wrap mb-6'>
+									<div className='w-full md:w-2/6 mb-6 px-4'>
+										<label className='block text-copy-primary mb-2 font-bold' htmlFor='phonecode'>Phone Code</label>
+										<Select searchable name='phonecode' id='phonecode' value={formData.phonecode} onChange={handleDropdown} items={rawCountries} itemId={3} itemLabel={o => <><Flag flag={o[2]} /> &nbsp; +{o[3]}</>} itemSearch={o => `${o[3]} ${o[0]}`} itemRender={(o, x) => <><Flag flag={o[2]} /> &nbsp; {o[0]} &nbsp; <span className={x ? 'text-white font-bold' : 'text-gray-500'}>+{o[3]}</span></>} />
+									</div>
+									<div className='w-full md:w-4/6 mb-6 px-4'>
+										<label className='block text-copy-primary mb-2 font-bold' htmlFor='phonecode'>Phone Number</label>
+										<Field type='text' name='phonenumber' id='phonenumber' value={formData.phonenumber} onChange={handlePhone} />
+									</div>								
+								</div>								
 							</form>
 						</div>
 

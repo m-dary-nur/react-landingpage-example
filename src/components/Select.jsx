@@ -1,9 +1,9 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import { AutoSizer, List } from 'react-virtualized'
 
 
 const Select = props => {
-    const { id, name, itemRender, onChange, items, itemId, itemLabel, searchable } = props
+    const { id, name, value, onChange, items, itemId, itemLabel, itemSearch, searchable } = props
     const [state, setState] = useState({
         keyword: '',
         isOpen: false,
@@ -12,8 +12,9 @@ const Select = props => {
     })
     const { item, keyword, isOpen } = state                
     const [itemlist, setItemlist] = useState(items)
-
-    const display = x => x ? (typeof itemLabel === 'function' ? itemLabel(x) : x[itemLabel]) : <>&nbsp;</>
+    
+    const toSreach = x => x ? (typeof itemSearch === 'function' ? itemSearch(x) : x[itemSearch]) : <>&nbsp;</>
+    const toLabel = x => x ? (typeof itemLabel === 'function' ? itemLabel(x) : x[itemLabel]) : <>&nbsp;</>
     const handleOpen = () => {
         setState({ ...state, isOpen: true })
         if (searchable) {
@@ -29,7 +30,7 @@ const Select = props => {
     }, 170)    
 
     const handleSelected = (item, index = null) => {
-        const keyword = display(item)
+        const keyword = ''
         if (index) {
             setState({ ...state, item, index, keyword, isOpen: false })
         } else {            
@@ -44,7 +45,7 @@ const Select = props => {
         } else {
             setState({ ...state, keyword: e.target.value })
         }
-        const itemFiltered = items.filter(o => display(o).toString().toLowerCase().includes(keyword.toLowerCase()))
+        const itemFiltered = items.filter(o => toSreach(o).toString().toLowerCase().includes(keyword.toLowerCase()))
         setItemlist(itemFiltered)
     }
 
@@ -67,45 +68,40 @@ const Select = props => {
         }
     }
 
-    // useEffect(() => {        
-    //     if (value && items.length > 0) {
-    //         const index = itemlist.findIndex(x => x[itemId] === value)
-    //         const item = itemlist[index]
-    //         setState(state => ({ ...state, item, index }))        
-    //     }
-    // }, [value, items, itemlist, itemId])
+    useEffect(() => {        
+        if (value && items.length > 0) {
+            const index = itemlist.findIndex(x => x[itemId] === value)
+            const item = itemlist[index]
+            setState(state => ({ ...state, item, index }))        
+        }
+    }, [value, items, itemId, itemlist])
 
     return (
         <div className='dropdown inline-block relative w-full'>                        
             <button type='button' onClick={handleOpen} onBlur={handleClose} className='flex items-center w-full bg-background-form border border-border-color-primary shadow rounded outline-none text-left focus:border-green-700 p-4'>
-                {itemRender && item !== null ? itemRender(item, false) : display(item)}
+                {toLabel(item)}
             </button>            
-            {isOpen && <DropdownSelect { ...props } { ...{ display, state, searchable, setState, itemlist, handleSelected, handleClose, handleSearch, handleArrow, handleOpen } } />}
+            {isOpen && <DropdownSelect { ...props } { ...{ state, itemlist, toLabel, handleSelected, handleArrow, handleOpen, handleClose, searchable, handleSearch } } />}
         </div>
     )
 }
 
-export default memo(Select, (p, n) => 
-    p.value === n.value   
-)
+export default memo(Select)
 
 
 const DropdownSelect = memo(({
     id,
     name,
-    onChange,    
-    itemId,
     state,
-    setState,
-    searchable,
-    display,
     itemlist,
-    itemRender,
+    toLabel,
     handleSelected,
+    handleArrow,
     handleOpen,
     handleClose,
+    searchable,
     handleSearch,
-    handleArrow
+    itemRender,
 }) => {    
 
     const renderRow = ({ index, key, style }) => {
@@ -116,7 +112,7 @@ const DropdownSelect = memo(({
             <li onClick={() => {
                 handleSelected(item, index)
             }} key={key} className={`flex items-center border-gray-200 py-2 px-4 block whitespace-no-wrap${isSelected ? ' bg-primary text-white': ' hover:bg-gray-200 bg-white'}`} style={style}>
-                {itemRender ? itemRender(item, isSelected) : display(item)}
+                {itemRender ? itemRender(item, isSelected) : toLabel(item)}
             </li>
         )
     } 
