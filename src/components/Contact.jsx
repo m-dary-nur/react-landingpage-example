@@ -22,7 +22,7 @@ const Contact = () => {
 
 	const handleSubmit = e => {
 		e.preventDefault()
-		fetch('/', {
+		fetch('/.netlify/functions/sendmail', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			body: encode({
