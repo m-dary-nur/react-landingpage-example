@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './assets/styles/index.css'
-import './assets/styles/custom.scss'
 import './assets/flags/flags.scss'
 import Root from './Root'
 import * as serviceWorker from './serviceWorker'
