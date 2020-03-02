@@ -1,11 +1,15 @@
-const sgMail = require('@sendgrid/mail')
+import sgMail from '@sendgrid/mail'
+import querystring from 'querystring'
 const { SG_API_KEY, SG_CC_EMAIL, SG_TO_EMAIL, SG_SENDER_EMAIL } = process.env
 
 exports.handler =  async (event, context, callback) => {
 
-    const payload = JSON.parse(event.body)
-    const { email, subject } = payload
+    if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, body: 'Method Not Allowed' };
+    }
 
+    const payload = querystring.parse(event.body);
+    
     sgMail.setApiKey(SG_API_KEY)
 
     // const body = Object.keys(payload).map((k) => {
