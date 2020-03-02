@@ -1,5 +1,5 @@
-import sgMail from '@sendgrid/mail'
-import querystring from 'querystring'
+const sgMail = require('@sendgrid/mail')
+const querystring = require('querystring')
 const { SG_API_KEY, SG_CC_EMAIL, SG_TO_EMAIL, SG_SENDER_EMAIL } = process.env
 
 exports.handler =  async (event, context, callback) => {
